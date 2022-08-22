@@ -17,11 +17,11 @@
 
 ```console
 |── OneStep
-	├── config            ................... Global Config Sets
-		├── api.py        ................... API Sets
-		├── const.py      ................... Global Constant
-	├── data              ................... Test Data Sets
-		├── api           ................... API Test Data
+    ├── config            ................... Global Config Sets
+        ├── api.py        ................... API Sets
+        ├── const.py      ................... Global Constant
+    ├── data              ................... Test Data Sets
+        ├── api           ................... API Test Data
         ├── app           ................... APP Test Data
         ├── feature       ................... Feature Test Data
         ├── monitor       ................... Online Monitor Data
@@ -29,10 +29,10 @@
         ├── ramp          ................... Rampup Test Data
         ├── security      ................... Security Test Data
         ├── stress        ................... Stress/Performance Test Data
-	├── doc               ................... Test Docs
+    ├── doc               ................... Test Docs
     ├── server            ................... Mock Service Or Online Toolkit
-	├── test              ................... TestCase Sets
-		├── api           ................... API TestCase
+    ├── test              ................... TestCase Sets
+        ├── api           ................... API TestCase
         ├── app           ................... APP TestCase
         ├── feature       ................... Feature TestCase
         ├── monitor       ................... Online TestCase
@@ -42,14 +42,14 @@
         ├── stress        ................... Stress/Performance TestCase
         ├── tool          ................... Test Tool
         ├── ui            ................... UI TestCase
-		├── conftest.py   ................... Global Fixture
-	├── .gitignore        ................... Git Ignore Rule
-	├── crontab           ................... Schedule Task Config
-	├── Dockerfile        ................... Docker Build File
+        ├── conftest.py   ................... Global Fixture
+    ├── .gitignore        ................... Git Ignore Rule
+    ├── crontab           ................... Schedule Task Config
+    ├── Dockerfile        ................... Docker Build File
     ├── LICENSE           ................... License File
-	├── pytest.ini        ................... Pytest Config
-	├── README.md         ................... Readme File
-	├── requirements.txt  ................... Project Dpendency
-	├── run.sh            ................... Docker Initiate Shell Script 
+    ├── pytest.ini        ................... Pytest Config
+    ├── README.md         ................... Readme File
+    ├── requirements.txt  ................... Project Dpendency
+    ├── run.sh            ................... Docker Initiate Shell Script 
 
 ```
