@@ -1,0 +1,19 @@
+# IDE
+.vscode/
+.venv/
+env/
+
+
+# Log
+*.log
+
+# Temp Excel File
+~$*.xlsx
+
+# Python
+__pycache__
+.pytest_cache
+allure-result
+
+# Temp
+tmp/

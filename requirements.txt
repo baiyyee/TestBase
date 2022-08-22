@@ -1,0 +1,15 @@
+fastapi
+locust
+pytest
+apscheduler
+pytest-html
+pytest-xdist
+allure-pytest
+pytest-repeat
+pytest-asyncio
+pytest-timeout
+pytest-ordering
+pytest-dependency
+pytest-rerunfailures
+pytest-playwright
+pytest-playwright-snapshot
