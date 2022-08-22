@@ -36,7 +36,6 @@
         ├── app           ................... APP TestCase
         ├── feature       ................... Feature TestCase
         ├── monitor       ................... Online TestCase
-        ├── page          ................... UI TestCase
         ├── ramp          ................... Rampup TestCase
         ├── security      ................... Security TestCase
         ├── stress        ................... Stress/Performance TestCase
