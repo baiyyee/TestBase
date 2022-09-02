@@ -1,6 +1,11 @@
-fastapi
+WeTest
+fastapi[all]
 locust
 pytest
+passlib
+bcrypt
+python-jose
+playwright
 apscheduler
 pytest-html
 pytest-xdist

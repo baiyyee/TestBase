@@ -3,6 +3,7 @@ import pytest
 import sqlite3
 import logging
 import asyncio
+import pytest_asyncio
 from jira import JIRA
 from requests import Session
 from WeTest.util import encry
@@ -41,9 +42,9 @@ def pytest_html_results_table_row(report, cells):
         del cells[:]
 
 
-@pytest.fixture(scope="session")
+@pytest_asyncio.fixture(scope="session")
 async def session():
-    
+
     session = ClientSession()
 
     yield session
@@ -53,7 +54,7 @@ async def session():
 
 @pytest.fixture(scope="session")
 def event_loop():
-    
+
     loop = asyncio.get_event_loop()
 
     yield loop
@@ -151,7 +152,6 @@ def api(config, request):
 
 @pytest.fixture(scope="session")
 def sqlite_in_file(tmp_path_factory: TempPathFactory):
-    
 
     database = tmp_path_factory.mktemp("data") / "test.db"
     logging.info(database)
@@ -162,18 +162,19 @@ def sqlite_in_file(tmp_path_factory: TempPathFactory):
     database = DataBase(database=database, type="sqlite")
 
     yield database
-    
+
     database.close()
+
 
 @pytest.fixture(scope="session")
 def sqlite_in_memory():
- 
+
     database = ":memory:"
 
     database = DataBase(database=database, type="sqlite")
 
     yield database
-    
+
     database.close()
 
 
@@ -189,7 +190,7 @@ def mysql(config):
     database = DataBase(db_username, db_password, db_host, db_port, db_dbname)
 
     yield database
-    
+
     database.close()
 
 

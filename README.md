@@ -50,5 +50,4 @@
     ├── README.md         ................... Readme File
     ├── requirements.txt  ................... Project Dpendency
     ├── run.sh            ................... Docker Initiate Shell Script 
-
 ```
