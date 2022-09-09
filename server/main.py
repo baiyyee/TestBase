@@ -38,7 +38,7 @@ app.include_router(user.router)
 app.include_router(file.router)
 
 
-# cd OneStep/app
+# cd OneStep/server
 # uvicorn main:app --reload --debug
 
 if __name__ == "__main__":

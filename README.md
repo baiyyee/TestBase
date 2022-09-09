@@ -30,7 +30,7 @@
         ├── security      ................... Security Test Data
         ├── stress        ................... Stress/Performance Test Data
     ├── doc               ................... Test Docs
-    ├── server            ................... Mock Service Or Online Toolkit
+    ├── server            ................... API Demo Or Online Toolkit
     ├── test              ................... TestCase Sets
         ├── api           ................... API TestCase
         ├── app           ................... APP TestCase
