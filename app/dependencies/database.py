@@ -1,4 +1,4 @@
-from ..const import DATABASE_URL
+from const import DATABASE_URL
 from sqlmodel import SQLModel, Session, create_engine, select
 
 

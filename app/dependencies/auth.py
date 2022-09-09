@@ -1,12 +1,12 @@
+import const
 from jose import jwt
-from .. import const
 from typing import Union
-from ..models import User
+from models import User
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException, status
-from ..dependencies.database import Session, get_session, select
+from dependencies.database import Session, get_session, select
 
 
 CXT = CryptContext(schemes=["bcrypt"], deprecated="auto")

@@ -1,8 +1,8 @@
 from typing import List
-from ..dependencies.auth import CXT, get_current_user
+from dependencies.auth import CXT, get_current_user
 from fastapi import APIRouter, Depends, status, HTTPException
-from ..dependencies.database import Session, select, get_session
-from ..models import UserBase, User, UserCreate, UserInfo, ResetPwd
+from dependencies.database import Session, select, get_session
+from models import UserBase, User, UserCreate, UserInfo, ResetPwd
 
 
 router = APIRouter(prefix="/user", tags=["Users"], dependencies=[Depends(get_current_user)])

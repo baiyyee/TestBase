@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
-from .routers import auth, user, file
+from routers import auth, user, file
 from fastapi.responses import JSONResponse
-from .dependencies.database import engine, SQLModel
+from dependencies.database import engine, SQLModel
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
@@ -25,7 +25,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         field = error.get("loc")[-1]
         error_message[field] = [{"code": error.get("type"), "message": error.get("msg")}]
 
-    return JSONResponse({"message": "字段校验失败", "fields": error_message})
+    return JSONResponse({"message": "Field Invalid", "fields": error_message})
 
 
 @app.on_event("startup")
@@ -38,8 +38,8 @@ app.include_router(user.router)
 app.include_router(file.router)
 
 
-# cd OneStep
-# uvicorn app.main:app --reload --debug
+# cd OneStep/app
+# uvicorn main:app --reload --debug
 
 if __name__ == "__main__":
     import uvicorn

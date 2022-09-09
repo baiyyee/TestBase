@@ -2,11 +2,11 @@ import aiofiles
 from uuid import uuid4
 from typing import List
 from pathlib import Path
-from ..const import STORAGE_PATH
-from ..models import File, FileInfo, User
-from ..dependencies.auth import get_current_user
+from const import STORAGE_PATH
+from models import File, FileInfo, User
+from dependencies.auth import get_current_user
 from fastapi import APIRouter, UploadFile, Depends
-from ..dependencies.database import Session, get_session, select
+from dependencies.database import Session, get_session, select
 
 
 router = APIRouter(prefix="/file", tags=["Files"], dependencies=[Depends(get_current_user)])

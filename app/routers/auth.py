@@ -1,9 +1,9 @@
-from ..models import User
+from models import User
 from datetime import timedelta
-from ..const import ACCESS_TOKEN_EXPIRE_MINUTES
+from const import ACCESS_TOKEN_EXPIRE_MINUTES
 from fastapi.security import OAuth2PasswordRequestForm
-from ..dependencies.auth import CXT, create_access_token
-from ..dependencies.database import Session, engine, select
+from dependencies.auth import CXT, create_access_token
+from dependencies.database import Session, engine, select
 from fastapi import APIRouter, Depends, HTTPException, status
 
 
