@@ -1,4 +1,7 @@
 WeTest
+sqlmodel
+email-validator
+aiofiles
 fastapi[all]
 locust
 pytest
