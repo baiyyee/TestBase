@@ -1,8 +1,10 @@
-from fastapi import FastAPI, Request
+from models import User
+from dependencies.auth import CXT
 from routers import auth, user, file
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from dependencies.database import engine, SQLModel
 from fastapi.exceptions import RequestValidationError
+from dependencies.database import engine, SQLModel, Session
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 
@@ -30,7 +32,22 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.on_event("startup")
 async def init_db():
+
+    # Init DB Table
     SQLModel.metadata.create_all(engine)
+
+    # Init User
+    with Session(engine) as session:
+        user = User(name="root", email="root@test.com", role=0, status=1, password=CXT.hash("123456"), creator=1)
+        session.add(user)
+        session.commit()
+
+
+@app.on_event("shutdown")
+async def clean_db():
+
+    # Clean Up DB Table
+    SQLModel.metadata.drop_all(engine)
 
 
 app.include_router(auth.router)
