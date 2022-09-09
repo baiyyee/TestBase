@@ -7,7 +7,7 @@ SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 DATABASE_URL = "sqlite:///./data/db/test.db"
 
 
-STORAGE_PATH = "app/data/storage"
+STORAGE_PATH = "data/storage"
 
 
 VALIDATORS_SCHEMA_REGEX = {"name": {"min_length": 2, "max_length": 20, "regex": r"^[a-zA-Z0-9 \-_]*$"}}
