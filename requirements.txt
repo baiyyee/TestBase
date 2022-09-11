@@ -12,6 +12,7 @@ playwright
 apscheduler
 pytest-html
 pytest-xdist
+pytest-sugar
 allure-pytest
 pytest-repeat
 pytest-asyncio
