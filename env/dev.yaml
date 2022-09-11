@@ -1,0 +1,67 @@
+s3:
+  endpoint: endpoint
+  access_key: access_key
+  secret_key: secret_key
+  bucket: bucket
+
+tracker:
+  host: host
+  port: 22
+  username: username
+  password: password
+
+database:
+  host: 127.0.0.1
+  port: 3306
+  username: root
+  password: 123456
+  dbname: testing
+
+rabbitmq:
+  host: host
+  port: 5672
+  username: username
+  password: password
+  vhost: /
+
+playwright:
+  browser: [chromium]
+  slow_mo: 0
+  headless: False
+
+portal:
+  auth_type: auth
+
+  proxy:
+    enable: False
+    type: socks5
+    server: server
+    port: 8090
+
+  auth:
+    auth_url: http://127.0.0.1:8000/login
+    client_id: ""
+    client_secret: ""
+    grant_type: ""
+
+  sku:
+    demo: http://127.0.0.1:8000
+
+  user:
+    root:
+      email: root@test.com
+      password: 123456
+      cookie: None
+      identify: None
+
+    admin:
+      email: admin@test.com
+      password: 123456
+      cookie: None
+      identify: None
+
+    comm:
+      email: comm@test.com
+      password: 123456
+      cookie: None
+      identify: None
