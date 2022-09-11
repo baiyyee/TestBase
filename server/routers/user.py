@@ -22,9 +22,9 @@ async def create_user(
     request: UserCreate, session: Session = Depends(get_session), current_user: User = Depends(get_current_user)
 ):
 
-    request.password = CXT.hash(request.password)
-
     user = User.from_orm(request)
+
+    user.password = CXT.hash(user.password)
 
     setattr(user, "creator", current_user.id)
 
@@ -53,7 +53,7 @@ async def get_users(offset: int = 0, limit: int = 10, session: Session = Depends
     return users
 
 
-@router.put("/{id}", response_model=UserInfo)
+@router.patch("/{id}", response_model=UserInfo)
 async def update_user(id: int, request: UserBase, session: Session = Depends(get_session)):
 
     user = session.get(User, id)
@@ -71,7 +71,7 @@ async def update_user(id: int, request: UserBase, session: Session = Depends(get
     return user
 
 
-@router.patch("/{id}/password/reset", response_model=UserInfo)
+@router.patch("/{id}/password/reset")
 async def reset_password(id: int, request: ResetPwd, session: Session = Depends(get_session)):
 
     user = session.get(User, id)
@@ -87,10 +87,10 @@ async def reset_password(id: int, request: ResetPwd, session: Session = Depends(
     session.commit()
     session.refresh(user)
 
-    return user
+    return {"detail": "success"}
 
 
-@router.delete("/{id}", status_code=status.HTTP_200_OK)
+@router.delete("/{id}")
 async def delete_user(id: int, session: Session = Depends(get_session)):
 
     user = session.get(User, id)
