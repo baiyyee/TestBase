@@ -1,8 +1,8 @@
 FROM hehuabo/wetest:latest
 
-RUN mkdir -p /home/test/OneStep
-WORKDIR /home/test/OneStep
-ADD . /home/test/OneStep
+RUN mkdir -p /home/test/TestBase
+WORKDIR /home/test/TestBase
+ADD . /home/test/TestBase
 
 RUN pip install --no-cache-dir -r requirements.txt
 
