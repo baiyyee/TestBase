@@ -9,8 +9,8 @@ from requests import Session
 from WeTest.util import encry
 from WeTest.util.api import API
 from aiohttp import ClientSession
-from pytest import TempPathFactory
 from WeTest.util import notification
+from passlib.context import CryptContext
 from WeTest.util.config import read_yaml
 from WeTest.util.client import DataBase, RabbitMQ, SSH, SFTP, Hive, Nacos, S3
 
@@ -105,7 +105,7 @@ def config(request):
 
 @pytest.fixture(
     scope="session",
-    params=os.getenv("TEST_ROLE", "admin").lower().split(","),
+    params=os.getenv("TEST_ROLE", "root").lower().split(","),
     ids=lambda data: f"[{data}]",
 )
 def api(config, request):
@@ -113,7 +113,7 @@ def api(config, request):
     role = request.param
 
     proxies = config["portal"]["proxy"]
-    domain = config["portal"]["sku"]
+    domain = config["portal"]["sku"]["demo"]
 
     auth_url = config["portal"]["auth"]["auth_url"]
     client_id = config["portal"]["auth"]["client_id"]
@@ -145,35 +145,32 @@ def api(config, request):
         headers = {"x-auth-user": email}
         api.set_headers(headers)
 
-    api.set_domain("https://www.baidu.com")
+    api.set_domain(domain)
 
     return api
 
 
-@pytest.fixture(scope="session")
-def sqlite_in_file(tmp_path_factory: TempPathFactory):
+@pytest.fixture(scope="session", autouse=True)
+def sqlite():
 
-    database = tmp_path_factory.mktemp("data") / "test.db"
-    logging.info(database)
+    path = "server/data/db/test.db"
 
-    if not database.exists():
-        sqlite3.connect(database)
+    database = DataBase(database=path, type="sqlite")
 
-    database = DataBase(database=database, type="sqlite")
+    sql_query_root = "select * from user where email='root@test.com'"
+    sql_insert_root = "insert into user (name, email, role, status, creator, password, created, updated) values ('root', 'root@test.com', 0, 1, 1, '$2b$12$Mky27TOoMnYkO4Gb7G4uR.O/viTeY/oIs928xtuAQ/uN8W5UIqwAO', '2022-09-10 12:43:06.189924', '2022-09-10 12:43:06.189926')"
 
-    yield database
-
-    database.close()
-
-
-@pytest.fixture(scope="session")
-def sqlite_in_memory():
-
-    database = ":memory:"
-
-    database = DataBase(database=database, type="sqlite")
+    root = database.query_to_dict(sql_query_root)
+    if not root:
+        database.exec_sql(sql_insert_root)
 
     yield database
+
+    # Note: sqlite_schema is not support for default python3 default sqlite version(3.22.0)
+    # tables = database.query_to_dict("select name from sqlite_schema where type='table' and name not like 'sqlite_%'")
+    tables = ["user", "file"]
+    for table in tables:
+        database.exec_sql(f"delete from {table}")
 
     database.close()
 
