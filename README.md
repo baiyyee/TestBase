@@ -1,6 +1,6 @@
-# OneStep
+# TestBase
 
-**OneStep** is a scaffold project to start a automation test project.
+**TestBase** is a scaffold project to start a automation test project.
 
 - System Environment (Opitonal)
   
@@ -16,7 +16,7 @@
 - Directory Structure
 
 ```console
-|── OneStep
+|── TestBase
     ├── config            ................... Global Config Sets
         ├── api.py        ................... API Sets
         ├── const.py      ................... Global Constant
