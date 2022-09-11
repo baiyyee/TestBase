@@ -1,0 +1,19 @@
+error:
+  common:
+    unique: "{value} already exists"
+
+  field:
+    name: Invalid character length (limit to 2 ~ 20 chars)
+    email: Invalid email format (like xxx@xxx.xxx)
+    role: Invalid enum value (0, 1, 2)
+    status: Invalid enum value (0, 1)
+    password: Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character
+
+label:
+  name: Name
+  desc: Description
+  new: New
+  edit: Edit
+  delete: Delete
+  upload: Upload
+  select: Select
