@@ -26,10 +26,7 @@ class TestUser:
 
     # Reused the same testcase, filter cases by needs
     testdata_user_edit = [
-        # data for data in testdata_user_create if "-密码-" not in data["tc_desc"] or "邮箱-重名-baseline" not in data["tc_desc"]
-        data
-        for data in testdata_user_create
-        if all([desc not in data["tc_desc"] for desc in ("-密码-", "邮箱-重名-baseline")])
+        data for data in testdata_user_create if all([desc not in data["tc_desc"] for desc in ("-密码-", "邮箱-重名-baseline")])
     ]
     testdata_user_reset_pwd = [data for data in testdata_user_create if "-密码-" in data["tc_desc"]]
 
