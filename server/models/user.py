@@ -17,14 +17,14 @@ class Role(IntEnum):
 
 
 class UserBase(SQLModel):
-    name: str = Field(min_length=2, max_length=20, regex=r"^[a-zA-Z0-9 \-_]*$")
+    name: str = Field(min_length=2, max_length=50)
     email: EmailStr = Field(unique=True)
     role: Role = Role.common
     status: Status = Status.enable
 
 
 class UserCreate(UserBase):
-    password: str
+    password: str = Field(min_length=6, max_length=20, regex=r"^[a-zA-Z0-9~`!@#$%^&*()-_+={}|;':,./<>?]*$")
 
 
 class UserInfo(UserBase):
@@ -38,4 +38,4 @@ class User(UserCreate, UserInfo, table=True):
 
 
 class ResetPwd(SQLModel):
-    password: str
+    password: str = Field(min_length=6, max_length=20, regex=r"^[a-zA-Z0-9~`!@#$%^&*()-_+={}|;':,./<>?]*$")
