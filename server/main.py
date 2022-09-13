@@ -1,6 +1,7 @@
 from models import User
 from dependencies.auth import CXT
 from routers import auth, user, file
+from jose import ExpiredSignatureError
 from fastapi.responses import JSONResponse
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
@@ -26,6 +27,12 @@ app = FastAPI(
         "url": "https://mit-license.org/",
     },
 )
+
+
+@app.exception_handler(ExpiredSignatureError)
+async def sqlalchemy_exception_handler(request, exc):
+
+    return JSONResponse(content={"error": str(exc)}, status_code=status.HTTP_401_UNAUTHORIZED)
 
 
 @app.exception_handler(SqlAlchemyIntegrityError)
