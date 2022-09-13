@@ -7,8 +7,12 @@
 # Log
 *.log
 
-# db
-test.db
+# data
+db/
+storage/
+
+# temp config
+*__resource.json
 
 # Temp Excel File
 ~$*.xlsx
