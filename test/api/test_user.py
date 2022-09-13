@@ -14,10 +14,10 @@ from WeTest.util import provider, compare
 
 
 @allure.epic("User Management")
-@pytest.mark.run(order=1)
 @pytest.mark.p0
 @pytest.mark.api
-class TestUser:
+@pytest.mark.run(order=1)
+class TestUserManagement:
 
     user = {}
 
@@ -73,6 +73,24 @@ class TestUser:
             assert response["name"] == payload["name"]
         else:
             assert response == json.loads(kw["expect_response"])
+
+    @allure.story("Get Specific User")
+    @pytest.mark.timeout(TIMEOUT)
+    @pytest.mark.dependency(depends=["test_create_user"])
+    def test_get_specific_user(self, api: API, sqlite: DataBase):
+        """Verify Get Specific User Success"""
+
+        path = apis.USER_SPECIFIC
+        path = path.format(id=self.user.get("id"))
+
+        response = api.request("GET", path)
+
+        assert response.status_code == 200
+
+        sql = "select id,name,email,role,status,creator from user where id={}".format(self.user.get("id"))
+        expect = sqlite.query_to_dict(sql)[0]
+
+        assert compare.campare_dict(response.json(), expect) == []
 
     @allure.story("Edit User")
     @pytest.mark.timeout(TIMEOUT)
@@ -155,6 +173,7 @@ class TestUser:
 
     @allure.story("Get Users")
     @pytest.mark.timeout(TIMEOUT)
+    @pytest.mark.dependency(depends=["test_create_user"])
     @pytest.mark.parametrize("testdata", [(0, 10)], ids=lambda data: "[offset:{}__limit:{}]".format(data[0], data[1]))
     def test_get_users(self, api: API, sqlite: DataBase, testdata):
         """Verify Get All Users Success"""
@@ -174,25 +193,9 @@ class TestUser:
         for i in range(len(response)):
             assert compare.campare_dict(response[i], expect[i]) == []
 
-    @allure.story("Get Specific User")
-    @pytest.mark.timeout(TIMEOUT)
-    def test_get_specific_user(self, api: API, sqlite: DataBase):
-        """Verify Get Specific User Success"""
-
-        path = apis.USER_SPECIFIC
-        path = path.format(id=self.user.get("id"))
-
-        response = api.request("GET", path)
-
-        assert response.status_code == 200
-
-        sql = "select id,name,email,role,status,creator from user where id={}".format(self.user.get("id"))
-        expect = sqlite.query_to_dict(sql)[0]
-
-        assert compare.campare_dict(response.json(), expect) == []
-
     @allure.story("Delete User")
     @pytest.mark.timeout(TIMEOUT)
+    @pytest.mark.dependency(depends=["test_create_user"])
     def test_get_delete_user(self, api: API):
         """Verify Delete User Success"""
 

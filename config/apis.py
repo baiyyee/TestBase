@@ -11,4 +11,6 @@ USER_PROFILE = "/user/profile"
 
 # 文件管理
 FILE = "/file"
+FILE_SPECIFIC = "/file/{id}"
 FILE_UPLOAD = "/file/upload"
+FILE_DOWNLOAD = "/file/{id}/download"
