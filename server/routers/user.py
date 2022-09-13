@@ -1,8 +1,8 @@
 from typing import List
 from dependencies.auth import CXT, get_current_user
-from fastapi import APIRouter, Depends, status, HTTPException
 from dependencies.database import Session, select, get_session
 from models import UserBase, User, UserCreate, UserInfo, ResetPwd
+from fastapi import APIRouter, status, HTTPException, Depends, Query
 
 
 router = APIRouter(prefix="/user", tags=["Users"], dependencies=[Depends(get_current_user)])
@@ -47,7 +47,9 @@ async def get_user(id: int, session: Session = Depends(get_session)):
 
 
 @router.get("/", response_model=List[UserInfo])
-async def get_users(offset: int = 0, limit: int = 10, session: Session = Depends(get_session)):
+async def get_users(
+    offset: int = Query(default=0, ge=0), limit: int = Query(default=10, ge=0), session: Session = Depends(get_session)
+):
 
     users = session.exec(select(User).offset(offset).limit(limit)).all()
     return users
