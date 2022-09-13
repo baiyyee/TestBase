@@ -12,7 +12,7 @@ class FileType(IntEnum):
 
 
 class File(SQLModel, table=True):
-    id: UUID = Field(primary_key=True)
+    id: str = Field(primary_key=True)
     name: str
     type: str
     path: str
