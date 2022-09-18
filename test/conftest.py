@@ -1,6 +1,5 @@
 import os
 import pytest
-import sqlite3
 import logging
 import asyncio
 import pytest_asyncio
@@ -10,7 +9,6 @@ from WeTest.util import encry
 from WeTest.util.api import API
 from aiohttp import ClientSession
 from WeTest.util import notification
-from passlib.context import CryptContext
 from WeTest.util.config import read_yaml
 from WeTest.util.client import DataBase, RabbitMQ, SSH, SFTP, Hive, Nacos, S3
 
@@ -108,12 +106,17 @@ def config(request):
     params=os.getenv("TEST_ROLE", "root").lower().split(","),
     ids=lambda data: f"[{data}]",
 )
-def api(config, request):
+def user_info(config, request):
 
     role = request.param
+    return config["portal"]["user"][role]
+
+
+@pytest.fixture(scope="session")
+def api(config, user_info):
 
     proxies = config["portal"]["proxy"]
-    domain = config["portal"]["sku"]["demo"]
+    domain = config["portal"]["sku"]["api"]
 
     auth_url = config["portal"]["auth"]["auth_url"]
     client_id = config["portal"]["auth"]["client_id"]
@@ -122,10 +125,10 @@ def api(config, request):
 
     auth_type = config["portal"]["auth_type"]
 
-    email = config["portal"]["user"][role]["email"]
-    password = config["portal"]["user"][role]["password"]
-    cookie = config["portal"]["user"][role]["cookie"]
-    identify = config["portal"]["user"][role]["identify"]
+    email = user_info["email"]
+    password = user_info["password"]
+    cookie = user_info["cookie"]
+    identify = user_info["identify"]
 
     api = API()
 

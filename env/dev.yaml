@@ -45,22 +45,26 @@ portal:
     grant_type: ""
 
   sku:
-    demo: http://127.0.0.1:8000
+    api: http://127.0.0.1:8000
+    ui: https://letcode.in
 
   user:
     root:
+      username: root
       email: root@test.com
       password: 123456
       cookie: None
       identify: None
 
     admin:
+      username: admin
       email: admin@test.com
       password: 123456
       cookie: None
       identify: None
 
     comm:
+      username: comm
       email: comm@test.com
       password: 123456
       cookie: None

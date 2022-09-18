@@ -8,11 +8,12 @@
 *.log
 
 # data
-db/
-storage/
+# db/
+# storage/
 
 # temp config
 *__resource.json
+storage.json
 
 # Temp Excel File
 ~$*.xlsx
