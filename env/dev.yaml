@@ -14,7 +14,7 @@ database:
   host: 127.0.0.1
   port: 3306
   username: root
-  password: 123456
+  password: "123456"
   dbname: testing
 
 rabbitmq:
@@ -52,20 +52,20 @@ portal:
     root:
       username: root
       email: root@test.com
-      password: 123456
+      password: "123456"
       cookie: None
       identify: None
 
     admin:
       username: admin
       email: admin@test.com
-      password: 123456
+      password: "123456"
       cookie: None
       identify: None
 
     comm:
       username: comm
       email: comm@test.com
-      password: 123456
+      password: "123456"
       cookie: None
       identify: None
