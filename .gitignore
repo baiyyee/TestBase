@@ -13,7 +13,7 @@ storage/
 
 # temp config
 *__resource.json
-storage.json
+storage_*.json
 
 # Temp Excel File
 ~$*.xlsx
