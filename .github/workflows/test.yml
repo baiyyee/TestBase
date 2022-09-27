@@ -17,6 +17,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
+          sudo apt-get install libsasl2-dev wkhtmltopdf
           python -m pip install --upgrade pip
           pip install cython
           pip install thriftpy
