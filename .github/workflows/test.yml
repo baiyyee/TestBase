@@ -1,4 +1,7 @@
-name: test
+name: Run Tests
+
+on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -7,24 +10,19 @@ jobs:
         python-version: ["3.8"]
 
     steps:
-      playwright:
-        name: "Playwright Tests"
-        container:
-          image: mcr.microsoft.com/playwright:v1.26.0-focal
-        steps:
-          - uses: actions/checkout@v3
-          - name: Set up Python
-            uses: actions/setup-python@v4
-            with:
-              python-version: ${{ matrix.python-version }}
-          - name: Install dependencies
-            run: |
-              python -m pip install --upgrade pip
-              pip install cython
-              pip install thriftpy
-              pip install pandas==1.4.2
-              if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          - name: Ensure browsers are installed
-            run: python -m playwright install --with-deps
-          - name: Run your tests
-            run: xvfb-run pytest test/ui
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cython
+          pip install thriftpy
+          pip install pandas==1.4.2
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Ensure browsers are installed
+        run: python -m playwright install --with-deps
+      - name: Run your tests
+        run: xvfb-run pytest test/ui
