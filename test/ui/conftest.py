@@ -7,25 +7,31 @@ import allure
 import pytest
 from page.app import App
 from WeTest.util import path
+from pytest import FixtureRequest
+from playwright.sync_api import BrowserContext
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
 
     outcome = yield
-    result = outcome.get_result()
-    setattr(item, f"result_{result.when}", result)
+    rep = outcome.get_result()
+    setattr(item, "rep_" + rep.when, rep)
 
 
-# @pytest.fixture(scope="function", autouse=True)
-# def take_screenshot(request):
+@pytest.fixture(scope="function", autouse=True)
+def screenshot_on_failure(context: BrowserContext, request: FixtureRequest):
 
-#     yield
+    yield context
 
-#     if request.node.rep_call.failed:
-#         for arg in request.node.funcargs.values():
-#             if isinstance(arg, App):
-#                 allure.attach(body=arg.page.screenshot(), name="screenshot", attachment_type=allure.attachment_type.PNG)
+    # If requst.node is missing rep_call, then some error happened during execution
+    # that prevented teardown, but should still be counted as a failure
+    failed = request.node.rep_call.failed if hasattr(request.node, "rep_call") else True
+
+    if failed:
+        for arg in request.node.funcargs.values():
+            if isinstance(arg, App):
+                allure.attach(body=arg.page.screenshot(), name="screenshot", attachment_type=allure.attachment_type.PNG)
 
 
 def pytest_addoption(parser):
