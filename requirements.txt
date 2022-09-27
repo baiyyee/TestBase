@@ -1,4 +1,5 @@
 WeTest
+WeTest[hive]
 sqlmodel
 email-validator
 aiofiles
