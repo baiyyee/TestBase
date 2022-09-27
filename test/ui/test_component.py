@@ -498,6 +498,7 @@ def test_scroll(page: Page):
     logging.info(button.text_content())
 
 
+@pytest.mark.skip(reason="Never Stop")
 def test_game(page: Page):
 
     page.goto("/game")
