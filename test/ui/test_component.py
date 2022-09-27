@@ -1,7 +1,9 @@
+import random
 import pytest
 import logging
-from WeTest.util import compare
+from pandas import DataFrame
 from playwright.sync_api import Page, expect
+from WeTest.util import compare, date, testdata, path
 from playwright._impl._browser_context import BrowserContext
 
 
@@ -276,11 +278,26 @@ def test_selectable(page: Page):
     page.keyboard.up("Shift")
 
 
-@pytest.mark.skip(reason="Not impement yet")
 def test_slider(page: Page):
 
     page.goto("/slider")
     page.wait_for_load_state()
+
+    src = page.locator("#generate").bounding_box()
+
+    while page.locator("h1.has-text-info").text_content().split(":")[-1].strip() != "20":
+        page.mouse.move(src["x"], src["y"])
+        page.mouse.down()
+        page.mouse.move(src["x"] + 15, src["y"])
+        page.mouse.up()
+
+        src["x"] = src["x"] + 15
+
+        page.wait_for_timeout(1000)
+
+    page.click(".block .button.is-primary")
+    country = page.locator(".notification.is-primary").all_text_contents()[0].split("-")
+    assert len(country) == 20
 
 
 def test_table(page: Page):
@@ -295,14 +312,15 @@ def test_table(page: Page):
     logging.info(prices)
     assert sum(prices[:-1]) == prices[-1]
 
-    page.locator("#simpletable tr:has-text('Raj')").locator("input").check()
+    # page.locator("#simpletable tr:has-text('Raj')").locator("input").check()
+    page.locator("#simpletable tr:has-text('Raj') td >> nth=3").check()
 
     headers = page.locator("#advancedtable th")
     rows = page.locator("#advancedtable tr")
     cols = page.locator("#advancedtable td")
 
     # The original data without sorting
-    datas = [[cols.nth(i).text_content() for i in range(j, cols.count(), headers.count())] for j in range(0, rows.count())]
+    datas = [[cols.nth(i).text_content() for i in range(j, cols.count(), headers.count())] for j in range(0, headers.count())]
     logging.info(datas)
 
     # Sort data by column and verify data
@@ -338,16 +356,174 @@ def test_advancedtable(page: Page):
     page.locator("a[data-dt-idx='2']").click()
 
     count = page.locator("#advancedtable th").count()
-    rows = page.locator("#advancedtable tr")
     cols = page.locator("#advancedtable td")
-    datas = [[cols.nth(i).text_content() for i in range(j, cols.count(), count)] for j in range(0, rows.count())]
+    datas = [[cols.nth(i).text_content() for i in range(j, cols.count(), count)] for j in range(0, count)]
 
     # Note: page.locator(".paginate_button.next").is_enabled() is not worked here, looks so strange, so used class attribute instead
     while page.locator(".paginate_button.next").get_attribute("class") != "paginate_button next disabled":
         page.locator(".paginate_button.next").click()
 
-        rows = page.locator("#advancedtable tr")
         cols = page.locator("#advancedtable td")
-        datas += [[cols.nth(i).text_content() for i in range(j, cols.count(), count)] for j in range(0, rows.count())]
+        data = [[cols.nth(i).text_content() for i in range(j, cols.count(), count)] for j in range(0, count)]
 
-    logging.info(datas)
+        for i in range(count):
+            datas[i] += data[i]
+
+    df = DataFrame(columns=[page.locator("#advancedtable th").nth(i).text_content() for i in range(count)])
+    for i, column in enumerate(df.columns):
+        df[column] = datas[i]
+
+    # Verify Search
+    for column in df.columns:
+        search = random.choice(df[column])
+        filter = df.loc[df[column].str.contains(search), :].reset_index(drop=True)
+
+        logging.info(f"column => {column}")
+        logging.info(f"search => {search}")
+
+        page.locator("input[type='search']").fill(search)
+
+        # For below locator, only 1 pages shows, only verify page 1 for now
+        tr = page.locator("#advancedtable tbody tr")
+        filter = filter.head(tr.count())
+
+        assert tr.count() == len(filter)
+
+        for i in range(tr.count()):
+            assert tr.nth(i).all_text_contents()[0] == "".join(filter.loc[i, :].to_list())
+
+
+def test_calendar(page: Page):
+
+    page.goto("/calendar")
+    page.wait_for_load_state()
+
+    today = date.get_today("D")
+    today_add_3 = date.get_date_by_timedelta(date.get_today(), "D", days=3)
+
+    page.locator(".datetimepicker-dummy.is-primary input >> nth=0").click()
+    page.locator(f".datepicker-days >> nth=1 >> button:text-is('{today}')").click()
+    page.locator(f".datepicker-days >> nth=1 >> button:text-is('{today_add_3}') >> nth=-1").click()
+
+    logging.info(date.get_today("H"))
+    logging.info(date.get_today("m"))
+
+    for _ in range(int(date.get_today("H")) + 2):
+        page.locator(".timepicker-next >> nth=0").click()
+    for _ in range(int(date.get_today("m"))):
+        page.locator(".timepicker-next >> nth=-1").click()
+
+
+def test_waits(page: Page):
+
+    page.goto("/waits")
+    page.wait_for_load_state()
+
+    def dialog_handler(dialog):
+        logging.info(dialog.type)
+        logging.info(dialog.message)
+        logging.info(dialog.default_value)
+        dialog.accept()
+
+    page.on("dialog", dialog_handler)
+    page.click("#accept")
+    page.wait_for_event("dialog")
+
+
+def test_forms(page: Page):
+
+    page.goto("/forms")
+    page.wait_for_load_state()
+
+    page.fill("#firstname", "Huabo")
+    page.fill("#lasttname", "He")
+    page.fill("#email", testdata.email())
+    page.select_option(".control select", value="86")
+    page.fill("#Phno", testdata.string(seeds="123456789", length=10))
+    page.fill("#Addl1", testdata.address())
+    page.fill("#Addl2", testdata.address())
+    page.fill("#state", testdata.address())
+    page.fill("#postalcode", testdata.postcode())
+    page.select_option("select:below(#country)", value="China")
+    page.fill("#Date", "1990-08-28")
+    page.check("#male")
+    page.click("input[type='checkbox']")
+    page.click("input[type='submit']")
+
+
+def test_file(page: Page, tmp_path):
+
+    page.goto("/file")
+    page.wait_for_load_state()
+
+    file = str(tmp_path / "test.txt")
+
+    path.write_text("hello world", file)
+
+    page.locator(".file-cta").set_input_files(file)
+
+    def handler(download):
+        logging.info(download.path())
+        download.save_as(tmp_path)
+
+    page.on("download", handler)
+    page.click("#xls")
+    page.click("#pdf")
+    page.click("#txt")
+
+
+def test_shadow(page: Page):
+
+    page.goto("/shadow")
+    page.wait_for_load_state()
+
+    page.fill("#fname", "Huabo")
+    # page.fill("#lname", "He")
+    # page.fill("#email", testdata.email())
+
+
+def test_scroll(page: Page):
+
+    page.goto("/")
+    page.wait_for_load_state()
+
+    button = page.locator("a >> text=LetXPath")
+
+    # Scroll Screen: Method 1
+    # button.scroll_into_view_if_needed()
+
+    # Scroll Screen: Method 2
+    page.mouse.wheel(0, button.bounding_box()["y"])
+
+    logging.info(button.text_content())
+
+
+def test_game(page: Page):
+
+    page.goto("/game")
+    page.wait_for_load_state()
+
+    page.click(".start-button")
+    page.click(".new-game-button >> nth=1")
+
+    while True:
+        target = page.locator("div[style='background-color: rgb(236, 100, 75);']").bounding_box()
+
+        while True:
+            real = page.locator("div[style='background-color: rgb(51, 110, 123);']").bounding_box()
+
+            if real["x"] == target["x"]:
+                page.keyboard.down("ArrowDown")
+
+            elif real["y"] == target["y"]:
+                page.keyboard.down("ArrowRight")
+
+            if real == target:
+                page.keyboard.down("ArrowRight")
+                page.wait_for_timeout(1000)
+                page.keyboard.down("ArrowUp")
+                break
+
+            page.wait_for_timeout(10)
+
+        page.wait_for_timeout(2000)
