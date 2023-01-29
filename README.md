@@ -34,6 +34,7 @@
     ├── test              ................... TestCase Sets
         ├── api           ................... API TestCase
         ├── app           ................... APP TestCase
+        ├── calc          ................... Data-Analytics TestCase
         ├── feature       ................... Feature TestCase
         ├── monitor       ................... Online TestCase
         ├── ramp          ................... Rampup TestCase

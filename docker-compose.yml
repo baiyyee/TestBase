@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    restart: always
+    privileged: true
+    user: root
+    ports:
+      - 8000:8080
+    volumes:
+      - /home/hhb/dev/docker_volumns/jenkins:/var/jenkins_home
+  # app:
+  #   build: ./
+  #   ports:
+  #     - 8090:8080
+  #   environment:
+  #     PYTEST_CMD: pytest test/ui
+  #   depends_on:
+  #     - jenkins

@@ -6,6 +6,8 @@ aiofiles
 fastapi[all]
 locust
 pytest
+airtest
+pocoui
 passlib
 bcrypt
 python-jose
